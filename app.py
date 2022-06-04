@@ -20,28 +20,28 @@ from config import DefaultConfig
 
 CONFIG = DefaultConfig()
 
-# Create adapter.
-# See https://aka.ms/about-bot-adapter to learn more about how bots work.
+# Cria adaptador.
+# Consulte https://aka.ms/about-bot-adapter para saber mais sobre como os bots funcionam.
 SETTINGS = BotFrameworkAdapterSettings(CONFIG.APP_ID, CONFIG.APP_PASSWORD)
 ADAPTER = BotFrameworkAdapter(SETTINGS)
 
 
 # Catch-all for errors.
 async def on_error(context: TurnContext, error: Exception):
-    # This check writes out errors to console log .vs. app insights.
-    # NOTE: In production environment, you should consider logging this to Azure
-    #       application insights.
+    # Esta verificação grava os erros no log do console .vs. insights de aplicativos.
+    # NOTE: No ambiente de produção, você deve considerar registrar isso no Azure
+    #       insights de aplicativos.
     print(f"\n [on_turn_error] unhandled error: {error}", file=sys.stderr)
     traceback.print_exc()
 
-    # Send a message to the user
+    #Envia uma mensagem para o usuário
     await context.send_activity("The bot encountered an error or bug.")
     await context.send_activity(
         "To continue to run this bot, please fix the bot source code."
     )
-    # Send a trace activity if we're talking to the Bot Framework Emulator
+    # Envie uma atividade de rastreamento se estivermos conversando com o Bot Framework Emulator
     if context.activity.channel_id == "emulator":
-        # Create a trace activity that contains the error object
+        # Cria uma atividade de rastreamento que contém o objeto de erro
         trace_activity = Activity(
             label="TurnError",
             name="on_turn_error Trace",
@@ -50,19 +50,19 @@ async def on_error(context: TurnContext, error: Exception):
             value=f"{error}",
             value_type="https://www.botframework.com/schemas/error",
         )
-        # Send a trace activity, which will be displayed in Bot Framework Emulator
+        # Envie uma atividade de rastreamento, que será exibida no Bot Framework Emulator
         await context.send_activity(trace_activity)
 
 
 ADAPTER.on_turn_error = on_error
 
-# Create the Bot
+#Cria o bot
 BOT = MyBot()
 
 
-# Listen for incoming requests on /api/messages
+# Ouça as solicitações recebidas em /api/messages
 async def messages(req: Request) -> Response:
-    # Main bot message handler.
+   # Manipulador de mensagens do bot principal.
     if "application/json" in req.headers["Content-Type"]:
         body = await req.json()
     else:
