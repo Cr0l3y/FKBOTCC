@@ -26,18 +26,18 @@ SETTINGS = BotFrameworkAdapterSettings(CONFIG.APP_ID, CONFIG.APP_PASSWORD)
 ADAPTER = BotFrameworkAdapter(SETTINGS)
 
 
-# Catch-all for errors.
+# Pega tudo para erros.
 async def on_error(context: TurnContext, error: Exception):
     # Esta verificação grava os erros no log do console .vs. insights de aplicativos.
     # NOTE: No ambiente de produção, você deve considerar registrar isso no Azure
     #       insights de aplicativos.
-    print(f"\n [on_turn_error] unhandled error: {error}", file=sys.stderr)
+    print(f"\n [on_turn_error] erro não tratado: {error}", file=sys.stderr)
     traceback.print_exc()
 
     #Envia uma mensagem para o usuário
-    await context.send_activity("The bot encountered an error or bug.")
+    await context.send_activity("O bot encontrou um erro ou bug.")
     await context.send_activity(
-        "To continue to run this bot, please fix the bot source code."
+        "Para continuar a executar este bot, corrija o código-fonte do bot."
     )
     # Envie uma atividade de rastreamento se estivermos conversando com o Bot Framework Emulator
     if context.activity.channel_id == "emulator":
